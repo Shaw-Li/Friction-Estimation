@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>VehicleSimpleLinear</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-09-15"><meta name="DC.source" content="VehicleSimpleLinear.m"><style type="text/css">
+      --><title>VehicleSimpleLinear</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-11-01"><meta name="DC.source" content="VehicleSimpleLinear.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -23,7 +23,7 @@ a:visited { color:#004aa0; text-decoration:none; }
 
 p { padding:0px; margin:0px 0px 20px; }
 img { padding:0px; margin:0px 0px 20px; border:none; }
-p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+p img, pre img, tt img, li img { margin-bottom:0px; } 
 
 ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
 ul li { padding:0px; margin:0px 0px 7px 0px; }
@@ -38,12 +38,11 @@ ol li ul li { list-style:square; }
 
 .content { font-size:1.2em; line-height:140%; padding: 20px; }
 
-pre, code { font-size:12px; }
-tt { font-size: 1.2em; }
+pre, tt, code { font-size:12px; }
 pre { margin:0px 0px 20px; }
+pre.error { color:red; }
 pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
 pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
-pre.error { color:red; }
 
 @media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
 
@@ -83,6 +82,8 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
             self.wT = 2;
             self.muy = .8;
             self.deltaf = 0;
+            self.Fxf = 0;
+            self.Fxr = 0;
         <span class="keyword">end</span>
 </pre><h2>Model<a name="3"></a></h2><p>Function with the model</p><pre class="codeinput">        <span class="keyword">function</span> dx = Model(self, t, estados,tspan)
             <span class="comment">% Data</span>
@@ -122,8 +123,21 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
             ALPHAR = ALPHAT - b/v0*dPSI;
 
             <span class="comment">% Longitudinal forces</span>
-            FxF = 0;
-            FxR = 0;
+            <span class="keyword">if</span> isa(self.Fxf,<span class="string">'function_handle'</span>)
+                FxF = self.Fxf([X;Y;PSI;VT;ALPHAT;dPSI],t);
+            <span class="keyword">elseif</span> length(self.Fxf)&gt;1
+                FxF = interp1(tspan,self.Fxf,t);
+            <span class="keyword">else</span>
+                FxF = self.Fxf;
+            <span class="keyword">end</span>
+
+            <span class="keyword">if</span> isa(self.Fxr,<span class="string">'function_handle'</span>)
+                FxR = self.Fxr([X;Y;PSI;VT;ALPHAT;dPSI],t);
+            <span class="keyword">elseif</span> length(self.Fxr)&gt;1
+                FxR = interp1(tspan,self.Fxr,t);
+            <span class="keyword">else</span>
+                FxR = self.Fxr;
+            <span class="keyword">end</span>
 
             <span class="comment">% Lateral force</span>
             FyF = nF * self.tire.Characteristic(ALPHAF, FzF / nF, muy);
@@ -140,7 +154,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
         <span class="keyword">end</span>
 </pre><pre class="codeinput">    <span class="keyword">end</span>
 <span class="keyword">end</span>
-</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 classdef VehicleSimpleLinear < VehicleDynamicsLateral.VehicleSimple
     % VehicleSimpleLinear Linear simple vehicle model.
@@ -159,6 +173,8 @@ classdef VehicleSimpleLinear < VehicleDynamicsLateral.VehicleSimple
             self.wT = 2;
             self.muy = .8;
             self.deltaf = 0;
+            self.Fxf = 0;
+            self.Fxr = 0;
         end
 
         %% Model
@@ -201,8 +217,21 @@ classdef VehicleSimpleLinear < VehicleDynamicsLateral.VehicleSimple
             ALPHAR = ALPHAT - b/v0*dPSI;
 
             % Longitudinal forces
-            FxF = 0;
-            FxR = 0;
+            if isa(self.Fxf,'function_handle')
+                FxF = self.Fxf([X;Y;PSI;VT;ALPHAT;dPSI],t);
+            elseif length(self.Fxf)>1
+                FxF = interp1(tspan,self.Fxf,t);
+            else
+                FxF = self.Fxf;
+            end
+
+            if isa(self.Fxr,'function_handle')
+                FxR = self.Fxr([X;Y;PSI;VT;ALPHAT;dPSI],t);
+            elseif length(self.Fxr)>1
+                FxR = interp1(tspan,self.Fxr,t);
+            else
+                FxR = self.Fxr;
+            end
 
             % Lateral force
             FyF = nF * self.tire.Characteristic(ALPHAF, FzF / nF, muy);

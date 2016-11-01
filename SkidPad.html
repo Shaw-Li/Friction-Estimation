@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Template Simple</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-11-01"><meta name="DC.source" content="TemplateSimple.m"><style type="text/css">
+      --><title>Skid pad</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-11-01"><meta name="DC.source" content="SkidPad.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -65,15 +65,16 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Template Simple</h1><!--introduction--><p>This template show how to simulate a simple vehicle and plot the results.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#3">Results</a></li><li><a href="#6">See Also</a></li></ul></div><pre class="codeinput">clear <span class="string">all</span>                   <span class="comment">% Clear workspace</span>
+  </style></head><body><div class="content"><h1>Skid pad</h1><!--introduction--><p>Maneuver in circles of a nonlinear simple vehicle with Pacejka tire model.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Code start</a></li><li><a href="#3">Model and parameters</a></li><li><a href="#6">Simulation</a></li><li><a href="#7">Results</a></li><li><a href="#11">See Also</a></li></ul></div><h2>Code start<a name="1"></a></h2><pre class="codeinput">clear <span class="string">all</span>                   <span class="comment">% Clear workspace</span>
 close <span class="string">all</span>                   <span class="comment">% Closing figures</span>
 clc                         <span class="comment">% Clear command window</span>
 </pre><pre class="codeinput">import <span class="string">VehicleDynamicsLateral.*</span>
+</pre><h2>Model and parameters<a name="3"></a></h2><p>Simulation</p><pre class="codeinput">T = 10;                     <span class="comment">% Total simulation time [s]</span>
+resol = 100;                <span class="comment">% Resolution</span>
+TSPAN = 0:T/resol:T;        <span class="comment">% Time span [s]</span>
+</pre><p>Tire (default)</p><pre class="codeinput">TireModel = TirePacejka();
+</pre><p>Vehicle</p><pre class="codeinput">System = VehicleSimpleNonlinear();
 
-<span class="comment">% Choosing tire</span>
-TireModel = TirePacejka();
-<span class="comment">% Choosing vehicle</span>
-System = VehicleSimpleNonlinear();
 <span class="comment">% Defining vehicle parameters</span>
 System.mF0 = 700;
 System.mR0 = 600;
@@ -83,23 +84,15 @@ System.nF = 2;
 System.nR = 2;
 System.wT = 2;
 System.muy = .8;
-System.deltaf = 0;
+System.deltaf = 20*pi/180;
+System.Fxf = 0;
+System.Fxr = @VelControl;
 
 System.tire = TireModel;
-<span class="comment">% Choosing simulation</span>
-T = 6;                      <span class="comment">% Total simulation time [s]</span>
-resol = 50;                 <span class="comment">% Resolution</span>
-TSPAN = 0:T/resol:T;        <span class="comment">% Time span [s]</span>
 simulator = Simulator(System, TSPAN);
-
-<span class="comment">% Changing initial conditions</span>
-simulator.ALPHAT0 = -0.2;             <span class="comment">% Initial side slip angle [rad]</span>
-simulator.dPSI0 = 0.7;                <span class="comment">% Initial yaw rate [rad/s]</span>
-
-
-<span class="comment">% Simulation</span>
-simulator.Simulate();
-</pre><h2>Results<a name="3"></a></h2><pre class="codeinput"><span class="comment">% Retrieving states</span>
+simulator.V0 = 8.333;
+</pre><h2>Simulation<a name="6"></a></h2><pre class="codeinput">simulator.Simulate();
+</pre><h2>Results<a name="7"></a></h2><pre class="codeinput"><span class="comment">% Retrieving states</span>
 XT = simulator.XT;
 YT = simulator.YT;
 PSI = simulator.PSI;
@@ -136,17 +129,31 @@ figure(6)
 plot(TSPAN,dPSI)
 xlabel(<span class="string">'time [s]'</span>)
 ylabel(<span class="string">'Yaw rate [rad/s]'</span>)
-</pre><img vspace="5" hspace="5" src="TemplateSimple_01.png" alt=""> <img vspace="5" hspace="5" src="TemplateSimple_02.png" alt=""> <img vspace="5" hspace="5" src="TemplateSimple_03.png" alt=""> <img vspace="5" hspace="5" src="TemplateSimple_04.png" alt=""> <img vspace="5" hspace="5" src="TemplateSimple_05.png" alt=""> <img vspace="5" hspace="5" src="TemplateSimple_06.png" alt=""> <p>Frame and animation</p><pre class="codeinput">g = Graphics(simulator);
-g.TractorColor = <span class="string">'r'</span>;
+</pre><img vspace="5" hspace="5" src="SkidPad_01.png" alt=""> <img vspace="5" hspace="5" src="SkidPad_02.png" alt=""> <img vspace="5" hspace="5" src="SkidPad_03.png" alt=""> <img vspace="5" hspace="5" src="SkidPad_04.png" alt=""> <img vspace="5" hspace="5" src="SkidPad_05.png" alt=""> <img vspace="5" hspace="5" src="SkidPad_06.png" alt=""> <p>Frame and animation</p><pre class="codeinput">g = Graphics(simulator);
+g.TractorColor = <span class="string">'c'</span>;
 
 g.Frame();
+
+angulo = 0:0.01:2*pi;
+
+[R,XC,YC] = circfit(XT(40:end),YT(40:end));
+
+XX = XC + R*cos(angulo);
+YY = YC + R*sin(angulo);
+
+hold <span class="string">on</span>
+plot(XX,YY,<span class="string">'k'</span>)
+
+
 g.Animation();
-</pre><img vspace="5" hspace="5" src="TemplateSimple_07.png" alt=""> <img vspace="5" hspace="5" src="TemplateSimple_08.png" alt=""> <p><img vspace="5" hspace="5" src="illustrations/AnimationSimple.gif" alt=""> </p><h2>See Also<a name="6"></a></h2><p><a href="index.html">Index</a></p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013a</a><br></p></div><!--
+</pre><img vspace="5" hspace="5" src="SkidPad_07.png" alt=""> <img vspace="5" hspace="5" src="SkidPad_08.png" alt=""> <p>Maneuver radius</p><pre class="codeinput">disp(num2str(R))
+</pre><pre class="codeoutput">10.7397
+</pre><p><img vspace="5" hspace="5" src="illustrations/AnimationSkidPad.gif" alt=""> </p><h2>See Also<a name="11"></a></h2><p><a href="index.html">Index</a></p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
-%% Template Simple
-% This template show how to simulate a simple vehicle and plot the results.
+%% Skid pad
+% Maneuver in circles of a nonlinear simple vehicle with Pacejka tire model.
 %
-%%
+%% Code start
 %
 
 clear all                   % Clear workspace
@@ -155,12 +162,27 @@ clc                         % Clear command window
 
 %%
 %
+
 import VehicleDynamicsLateral.*
 
-% Choosing tire
+%% Model and parameters
+% Simulation
+%
+
+T = 10;                     % Total simulation time [s]
+resol = 100;                % Resolution
+TSPAN = 0:T/resol:T;        % Time span [s]
+
+%%
+% Tire (default)
+
 TireModel = TirePacejka();
-% Choosing vehicle
+
+%%
+% Vehicle
+
 System = VehicleSimpleNonlinear();
+
 % Defining vehicle parameters
 System.mF0 = 700;
 System.mR0 = 600;
@@ -170,24 +192,21 @@ System.nF = 2;
 System.nR = 2;
 System.wT = 2;
 System.muy = .8;
-System.deltaf = 0;
+System.deltaf = 20*pi/180;
+System.Fxf = 0;
+System.Fxr = @VelControl;
 
 System.tire = TireModel;
-% Choosing simulation
-T = 6;                      % Total simulation time [s]
-resol = 50;                 % Resolution
-TSPAN = 0:T/resol:T;        % Time span [s]
 simulator = Simulator(System, TSPAN);
+simulator.V0 = 8.333;
 
-% Changing initial conditions
-simulator.ALPHAT0 = -0.2;             % Initial side slip angle [rad]
-simulator.dPSI0 = 0.7;                % Initial yaw rate [rad/s]
+%% Simulation
+%
 
-
-% Simulation
 simulator.Simulate();
 
 %% Results
+%
 
 % Retrieving states
 XT = simulator.XT;
@@ -231,13 +250,30 @@ ylabel('Yaw rate [rad/s]')
 % Frame and animation
 
 g = Graphics(simulator);
-g.TractorColor = 'r';
+g.TractorColor = 'c';
 
 g.Frame();
+
+angulo = 0:0.01:2*pi;
+
+[R,XC,YC] = circfit(XT(40:end),YT(40:end));
+
+XX = XC + R*cos(angulo);
+YY = YC + R*sin(angulo);
+
+hold on
+plot(XX,YY,'k')
+
+
 g.Animation();
 
 %%
-% <<illustrations/AnimationSimple.gif>>
+% Maneuver radius
+
+disp(num2str(R))
+
+%%
+% <<illustrations/AnimationSkidPad.gif>>
 %
 %% See Also
 %

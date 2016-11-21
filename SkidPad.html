@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Skid pad</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-11-20"><meta name="DC.source" content="SkidPad.m"><style type="text/css">
+      --><title>Skid pad</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-11-21"><meta name="DC.source" content="SkidPad.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -65,11 +65,8 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Skid pad</h1><!--introduction--><p>Maneuver in circles of a nonlinear simple vehicle with Pacejka tire model.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Code start</a></li><li><a href="#3">Model and parameters</a></li><li><a href="#6">Simulation</a></li><li><a href="#7">Results</a></li><li><a href="#11">See Also</a></li></ul></div><h2>Code start<a name="1"></a></h2><pre class="codeinput">clear <span class="string">all</span>                   <span class="comment">% Clear workspace</span>
-close <span class="string">all</span>                   <span class="comment">% Closing figures</span>
-clc                         <span class="comment">% Clear command window</span>
-</pre><pre class="codeinput">import <span class="string">VehicleDynamicsLateral.*</span>
-</pre><h2>Model and parameters<a name="3"></a></h2><p>Simulation</p><pre class="codeinput">T = 10;                     <span class="comment">% Total simulation time [s]</span>
+  </style></head><body><div class="content"><h1>Skid pad</h1><!--introduction--><p>Maneuver in circles of a nonlinear simple vehicle with Pacejka tire model.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Code start</a></li><li><a href="#2">Model and parameters</a></li><li><a href="#5">Simulation</a></li><li><a href="#6">Results</a></li><li><a href="#10">See Also</a></li></ul></div><h2>Code start<a name="1"></a></h2><pre class="codeinput">import <span class="string">VehicleDynamicsLateral.*</span>
+</pre><h2>Model and parameters<a name="2"></a></h2><p>Simulation</p><pre class="codeinput">T = 10;                     <span class="comment">% Total simulation time [s]</span>
 resol = 100;                <span class="comment">% Resolution</span>
 TSPAN = 0:T/resol:T;        <span class="comment">% Time span [s]</span>
 </pre><p>Tire (default)</p><pre class="codeinput">TireModel = TirePacejka();
@@ -91,8 +88,8 @@ System.Fxr = @VelControl;
 System.tire = TireModel;
 simulator = Simulator(System, TSPAN);
 simulator.V0 = 8.333;
-</pre><h2>Simulation<a name="6"></a></h2><pre class="codeinput">simulator.Simulate();
-</pre><h2>Results<a name="7"></a></h2><pre class="codeinput"><span class="comment">% Retrieving states</span>
+</pre><h2>Simulation<a name="5"></a></h2><pre class="codeinput">simulator.Simulate();
+</pre><h2>Results<a name="6"></a></h2><pre class="codeinput"><span class="comment">% Retrieving states</span>
 XT = simulator.XT;
 YT = simulator.YT;
 PSI = simulator.PSI;
@@ -148,19 +145,12 @@ plot(XX,YY,<span class="string">'k'</span>)
 g.Animation();
 </pre><img vspace="5" hspace="5" src="SkidPad_07.png" alt=""> <img vspace="5" hspace="5" src="SkidPad_08.png" alt=""> <p>Maneuver radius</p><pre class="codeinput">disp(num2str(R))
 </pre><pre class="codeoutput">10.7397
-</pre><p><img vspace="5" hspace="5" src="illustrations/AnimationSkidPad.gif" alt=""> </p><h2>See Also<a name="11"></a></h2><p><a href="index.html">Index</a></p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013a</a><br></p></div><!--
+</pre><p><img vspace="5" hspace="5" src="../illustrations/AnimationSkidPad.gif" alt=""> </p><h2>See Also<a name="10"></a></h2><p><a href="../index.html">index</a></p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Skid pad
 % Maneuver in circles of a nonlinear simple vehicle with Pacejka tire model.
 %
 %% Code start
-%
-
-clear all                   % Clear workspace
-close all                   % Closing figures
-clc                         % Clear command window
-
-%%
 %
 
 import VehicleDynamicsLateral.*
@@ -273,11 +263,11 @@ g.Animation();
 disp(num2str(R))
 
 %%
-% <<illustrations/AnimationSkidPad.gif>>
+% <<../illustrations/AnimationSkidPad.gif>>
 %
 %% See Also
 %
-% <index.html Index>
+% <../index.html index>
 %
 
 ##### SOURCE END #####

@@ -15,11 +15,13 @@ classdef VehicleSimpleNonlinear < VehicleDynamicsLateral.VehicleSimple
             self.wT = 2;
             self.muy = .8;
             self.deltaf = 0;
+            self.Fxf = 0;
+            self.Fxr = 0;
         end
 
         %% Model
         % Função com as equações de estado do modelo
-        function dx = Model(self, ~, estados)
+        function dx = Model(self, t, estados,tspan)
             % Data
             m = self.mT;
             I = self.IT;
@@ -28,26 +30,49 @@ classdef VehicleSimpleNonlinear < VehicleDynamicsLateral.VehicleSimple
             nF = self.nF;
             nR = self.nR;
             muy = self.muy;
-            DELTA = self.deltaf;
 
-            g = 9.81;                 % Acelera��o da gravidade [m/s^2]
+
+            g = 9.81;                 % Gravity [m/s^2]
 
             FzF = self.mF0 * g;       % Vertical load @ F [N]
             FzR = self.mR0 * g;       % Vertical load @ R [N]
 
             % Estados
+            X = estados(1);
+            Y = estados(2);
             PSI = estados(3);
             v = estados(4);
             ALPHAT = estados(5);
             dPSI = estados(6);
+
+
+            if isa(self.deltaf,'function_handle')
+                DELTA = self.deltaf([X;Y;PSI;v;ALPHAT;dPSI],t);
+            else
+                DELTA = interp1(tspan,self.deltaf,t);
+            end
+
 
             % Slip angles
             ALPHAF = atan2((v * sin(ALPHAT) + a * dPSI), (v * cos(ALPHAT))) - DELTA; % Dianteiro
             ALPHAR = atan2((v * sin(ALPHAT) - b * dPSI), (v * cos(ALPHAT)));         % Traseiro
 
             % Longitudinal forces
-            FxF = 0;
-            FxR = 0;
+            if isa(self.Fxf,'function_handle')
+                FxF = self.Fxf([X;Y;PSI;v;ALPHAT;dPSI],t);
+            elseif length(self.Fxf)>1
+                FxF = interp1(tspan,self.Fxf,t);
+            else
+                FxF = self.Fxf;
+            end
+
+            if isa(self.Fxr,'function_handle')
+                FxR = self.Fxr([X;Y;PSI;v;ALPHAT;dPSI],t);
+            elseif length(self.Fxr)>1
+                FxR = interp1(tspan,self.Fxr,t);
+            else
+                FxR = self.Fxr;
+            end
 
             % Characteristic curve
             FyF = nF * self.tire.Characteristic(ALPHAF, FzF/nF, muy);

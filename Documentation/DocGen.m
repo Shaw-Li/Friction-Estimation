@@ -10,6 +10,8 @@
 %
 %% Code start
 
+addpath('/home/andre/Repos/Vehicle-Dynamics/Vehicle-Dynamics-Lateral')
+
 docPath = '../../Vehicle-Dynamics-Lateral-Documentation/';
 apiDocPath = strcat(docPath, 'api/');
 
@@ -25,6 +27,7 @@ publish('DocTirePacejka.m', 'outputDir', docPath, 'evalCode', false);
 %% Vehicle models
 publish('DocVehicleSimpleLinear.m', 'outputDir', docPath, 'evalCode', false);
 publish('DocVehicleSimpleNonlinear.m', 'outputDir', docPath, 'evalCode', false);
+publish('DocVehicleSimpleNonlinear4DOF.m', 'outputDir', docPath, 'evalCode', false);
 publish('DocVehicleArticulatedLinear.m', 'outputDir', docPath, 'evalCode', false);
 publish('DocVehicleArticulatedNonlinear.m', 'outputDir', docPath, 'evalCode', false);
 
@@ -39,6 +42,7 @@ publish('@VehicleArticulated/VehicleArticulated.m', 'outputDir', apiDocPath, 'ev
 
 publish('@VehicleSimpleLinear/VehicleSimpleLinear.m', 'outputDir', apiDocPath, 'evalCode', false);
 publish('@VehicleSimpleNonlinear/VehicleSimpleNonlinear.m', 'outputDir', apiDocPath, 'evalCode', false);
+publish('@VehicleSimpleNonlinear4DOF/VehicleSimpleNonlinear4DOF.m', 'outputDir', apiDocPath, 'evalCode', false);
 publish('@VehicleArticulatedLinear/VehicleArticulatedLinear.m', 'outputDir', apiDocPath, 'evalCode', false);
 publish('@VehicleArticulatedNonlinear/VehicleArticulatedNonlinear.m', 'outputDir', apiDocPath, 'evalCode', false);
 
@@ -55,21 +59,54 @@ cd ../Examples/TemplateSimple
 %% Examples
 % TemplateSimple
 publish('TemplateSimple.m', 'outputDir', '../../../Vehicle-Dynamics-Lateral-Documentation/', 'evalCode', true);
+close all
+g.Animation('../../../Vehicle-Dynamics-Lateral-Documentation/illustrations/AnimationSimple');
 
 cd ../TemplateArticulated
 %%
 % TemplateArticulated
-publish('TemplateArticulated/TemplateArticulated.m', 'outputDir', '../../../Vehicle-Dynamics-Lateral-Documentation/', 'evalCode', true);
+publish('TemplateArticulated.m', 'outputDir', '../../../Vehicle-Dynamics-Lateral-Documentation/', 'evalCode', true);
+close all
+g.Animation('../../../Vehicle-Dynamics-Lateral-Documentation/illustrations/AnimationArticulated');
+
+cd ../SinusoidalSteering
+%%
+% Sinusoidal Steering
+publish('SinusoidalSteering.m', 'outputDir', '../../../Vehicle-Dynamics-Lateral-Documentation/', 'evalCode', true);
+close all
+g.Animation('../../../Vehicle-Dynamics-Lateral-Documentation/illustrations/AnimationSinusoidal');
 
 cd ../KalmanFilter
 %%
 % Kalman Filter
-publish('KalmanFilter/KalmanFilter.m', 'outputDir', '../../../Vehicle-Dynamics-Lateral-Documentation/', 'evalCode', true);
+publish('KalmanFilter.m', 'outputDir', '../../../Vehicle-Dynamics-Lateral-Documentation/', 'evalCode', true);
 
 cd ../TireComparison
 %%
 % TireComparison
-publish('TireComparison/TireComparison.m', 'outputDir', '../../../Vehicle-Dynamics-Lateral-Documentation/', 'evalCode', false);
+publish('TireComparison.m', 'outputDir', '../../../Vehicle-Dynamics-Lateral-Documentation/', 'evalCode', true);
+
+cd ../SteeringControl
+%%
+% SteeringControl
+publish('SteeringControl.m', 'outputDir', '../../../Vehicle-Dynamics-Lateral-Documentation/', 'evalCode', true,'showCode',false);
+close all
+g.Animation('../../../Vehicle-Dynamics-Lateral-Documentation/illustrations/SteeringControlAnimation');
+
+cd ../SkidPad
+%%
+% Skid Pad
+publish('SkidPad.m', 'outputDir', '../../../Vehicle-Dynamics-Lateral-Documentation/', 'evalCode', true,'showCode',true);
+close all
+g.Animation('../../../Vehicle-Dynamics-Lateral-Documentation/illustrations/AnimationSkidPad');
+
+cd ../SkidPad4DOF
+%%
+% Skid Pad
+publish('SkidPad4DOF.m', 'outputDir', '../../../Vehicle-Dynamics-Lateral-Documentation/', 'evalCode', true,'showCode',true);
+close all
+g.Animation('../../../Vehicle-Dynamics-Lateral-Documentation/illustrations/AnimationSkidPad4DOF');
+
 
 % % DocGen
 % publish('DocGen', 'outputDir', docPath, 'evalCode', false);

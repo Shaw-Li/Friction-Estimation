@@ -4,7 +4,7 @@
 %% Instructions
 % Installation steps:
 %
-% * Download the Vehicle-Dynamics package by clicking on "Download ZIP" in <https://github.com/andresmendes/Vehicle-Dynamics-Lateral https://github.com/andresmendes/Vehicle-Dynamics-Lateral>.
+% * Download the Vehicle Dynamics - Lateral repository by clicking <https://github.com/andresmendes/Vehicle-Dynamics-Lateral/archive/master.zip here>
 % * Save the package (folder "+VehicleDynamicsLateral") in the MATLAB(R) _path_ or add your current path to the _paths list_. More details in <http://www.mathworks.com/help/matlab/ref/path.html  help path>.
 % * Import the entire package with the command:
 %
@@ -25,7 +25,11 @@ import VehicleDynamicsLateral.*
 % * <TemplateSimple.html Template Simple> - Simple vehicle simulation.
 % * <TemplateArticulated.html Template Articulated> - Articulated vehicle simulation.
 % * <TireComparison.html Tire Comparison> - Comparison of tire models.
+% * <SinusoidalSteering.html Sinusoidal Steering> - Maneuver with sinusoidal steering angle input.
+% * <SteeringControl.html Steering Control> - Double lane change maneuver.
 % * <KalmanFilter.html Kalman Filter> - Kalman Filter application
+% * <SkidPad.html Skid Pad> - Simple vehicle moving in circle
+% * <SkidPad4DOF.html Skid Pad 4DOF> - Simple vehicle with roll dynamics moving in circle
 %
 %% Tire model
 %

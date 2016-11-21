@@ -1,5 +1,9 @@
 %% Tire comparison
 % Comparison between tire models: <PneuLinear.html linear>, <PneuPolinomial.html polinomial> e <PneuPacejka1989.html Pacejka 1989>.
+% 
+% <html>
+% <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+% </html>
 %
 %% Description
 % O modelo de pneu relaciona a fora lateral com o ngulo de deriva (ngulo formado entre o vetor velocidade do centro do pneu com o plano longitudinal do pneu). The typical relation between these two variables can be observed in the figure below (Adapted from [1]). Besides, its possible to verify the definition of slip angle.
@@ -9,19 +13,19 @@
 %% Equivalncia
 % Supondo um modelo de pneu <PneuPacejka1989.html Pacejka 1989> de referncia  possvel obter um modelo <PneuLinear.html linear> e <PneuPolinomial.html polinomial> equivalente. Isto  feito igualando o coeficiente de rigidez lateral dos trs modelos e igualando a fora lateral mxima dos modelos <PneuPolinomial.html polinomial> e <PneuPacejka1989.html Pacejka 1989>.
 %
-% The model <PneuPacejka1989.html Pacejka 1989> depends on the parameters $a_0$, $a_1$, $a_2$, $a_3$, $a_4$, $a_5$, $a_6$ e $a_7$ that defines the constants $B$, $C$, $D$ e $E$ wich can be used to define the constants of the equivalent models.
+% The model <PneuPacejka1989.html Pacejka 1989> depends on the parameters \(a_0\), \(a_1\), \(a_2\), \(a_3\), \(a_4\), \(a_5\), \(a_6\) e \(a_7\) that defines the constants \(B\), \(C\), \(D\) e \(E\) wich can be used to define the constants of the equivalent models.
 %
-% O modelo <PneuLinear.html linear> equivalente possui cornering stiffness $K$ dado por:
+% O modelo <PneuLinear.html linear> equivalente possui cornering stiffness \(K\) dado por:
 %
-% $$ K = B C D$$
+% \[ K = B C D \]
 %
-% O modelo <PneuPolinomial.html polinomial> equivalente possui coeficientes $k_1$ e $k_2$ dados por:
+% O modelo <PneuPolinomial.html polinomial> equivalente possui coeficientes \(k_1\) e \(k_2\) dados por:
 %
-% $$ k_1 = B C D $$
+% \[ k_1 = B C D \]
 %
-% $$ k_2 = (4 k_1^3)/(27 F_{y, Max}^2) $$
+% \[ k_2 = (4 k_1^3)/(27 F_{y, Max}^2) \]
 %
-% Onde $F_{y, Max}$  a fora lateral mxima da curva caracterstica de referncia.
+% Onde \(F_{y, Max}\)  a fora lateral mxima da curva caracterstica de referncia.
 %
 
 
@@ -33,13 +37,8 @@ clear all                   % Clear workspace
 close all                   % Closing figures
 clc                         % Clear command window
 
-import DinamicaVeicular.*   % Importando o pacote Dinamica Veicular
-
 deriva = (0:0.1:15)*pi/180;         % ngulo de deriva [rad]
 
-% Pneu Pacejka de referncia
-Fz = 4e+03;
-camber = 0;
 a0 = 1.3;
 a1 = 2.014156;
 a2 = 710.5013;
@@ -54,33 +53,55 @@ a10 = 0;
 a11 = 0;
 a12= 0;
 a13 = 0;
-pPac = DinamicaVeicular.PneuPacejka1989([a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13]);
 
-muy0 = a1 * Fz/1000 + a2;
+TirePac = VehicleDynamicsLateral.TirePacejka();
+
+Fz = 4e+03;
+camber = 0;
+TirePac.a0 = a0;
+TirePac.a1 = a1;
+TirePac.a2 = a2;
+TirePac.a3 = a3;
+TirePac.a4 = a4;
+TirePac.a5 = a5;
+TirePac.a6 = a6;
+TirePac.a7 = a7;
+TirePac.a8 = a8;
+TirePac.a9 = a9;
+TirePac.a10 = a10;
+TirePac.a11 = a11;
+TirePac.a12= a12;
+TirePac.a13 = a13;
+
+
+
+muy0 = TirePac.a1 * Fz/1000 + TirePac.a2;
 D = muy0 * Fz/1000;
-BCD = a3 * sin(2 * atan(Fz/1000/a4))*(1-a5 * abs(camber));
+BCD = TirePac.a3 * sin(2 * atan(Fz/1000/TirePac.a4))*(1-TirePac.a5 * abs(camber));
 
 % Pneu linear equivalente
 
 K = BCD * 180/pi;
 
-pLin = DinamicaVeicular.PneuLinear(K);
+TireLin = VehicleDynamicsLateral.TireLinear();
+TireLin.k = K;
 
 % Pneu polinomial equivalente
 
 k1 = BCD * 180/pi;
 k2 = (4 * k1^3)/(27 * D^2);
 
-pPol = DinamicaVeicular.PneuPolinomial([k1 k2]);
+TirePol = VehicleDynamicsLateral.TirePolynomial();
+TirePol.k1 = k1;
+TirePol.k2 = k2;
 
 % Lateral force
-FyPac = pPac.Characteristic(deriva, Fz, muy0/1000);
-FyLin = pLin.Characteristic(deriva);
-FyPol = pPol.Characteristic(deriva);
+FyPac = TirePac.Characteristic(deriva, Fz, muy0/1000);
+FyLin = TireLin.Characteristic(deriva);
+FyPol = TirePol.Characteristic(deriva);
 
 % Graphics
-
-g = DinamicaVeicular.Graficos;
+g = VehicleDynamicsLateral.Graphics(TirePac);
 
 figure(1)
 ax = gca;
@@ -91,8 +112,8 @@ p = plot(deriva * 180/pi,-FyPol, 'Color', 'b', 'Marker', '^', 'MarkerFaceColor',
 g.changeMarker(p, 10);
 p = plot(deriva * 180/pi,-FyPac, 'Color', 'r', 'Marker', 'o', 'MarkerFaceColor', 'r', 'MarkeredgeColor', 'k', 'MarkerSize', 7);
 g.changeMarker(p, 10);
-xlabel('$\alpha$ [grau]', 'Interpreter', 'Latex')
-ylabel('$F_y$ [N]', 'Interpreter', 'Latex')
+xlabel('\(\alpha\) [grau]', 'Interpreter', 'Latex')
+ylabel('\(F_y\) [N]', 'Interpreter', 'Latex')
 l = legend('Linear', 'Polinomial', 'Pacejka');
 set(l, 'Interpreter', 'Latex', 'Location', 'NorthWest')
 
@@ -119,7 +140,7 @@ fy = D * sin(C * atan(B * ALPHAeq - E*(B * ALPHAeq - atan(B * ALPHAeq))));
 FyPacSem180 = -muy/muy0*(fy + Sv);
 
 % Com tratamento
-FyPacCom180 = pPac.Characteristic(deriva180, Fz, muy0/1000);
+FyPacCom180 = TirePac.Characteristic(deriva180, Fz, muy0/1000);
 
 figure(2)
 ax = gca;
@@ -129,13 +150,13 @@ g.changeMarker(p, 10);
 p = plot(deriva180 * 180/pi,-FyPacCom180, 'Color', 'r', 'Marker', 'o', 'MarkerFaceColor', 'r', 'MarkeredgeColor', 'k', 'MarkerSize', 7);
 g.changeMarker(p, 10);
 plot([90 90],[0 3000],'--k')    % Linha vertical de simetria
-xlabel('$\alpha$ [grau]', 'Interpreter', 'Latex')
-ylabel('$F_y$ [N]', 'Interpreter', 'Latex')
+xlabel('\(\alpha\) [grau]', 'Interpreter', 'Latex')
+ylabel('\(F_y\) [N]', 'Interpreter', 'Latex')
 l = legend('Pacejka sem tratamento', 'Pacejka com tratamento');
 set(l, 'Interpreter', 'Latex', 'Location', 'SouthEast')
 
 %%
-% Na figura acima  possvel observar o efeito do tratamento do ngulo de deriva na curva caracterstica. The curve is symmetric to a vertical line positioned at $\alpha = 90 [graus]$.
+% Na figura acima  possvel observar o efeito do tratamento do ngulo de deriva na curva caracterstica. The curve is symmetric to a vertical line positioned at \(\alpha = 90 [graus]\).
 %
 %% References
 % [1] GILLESPIE, T. D. Fundamentals of vehicle dynamics. [S.l.]: Society of Automotive Engineers Warrendale, PA, 1992.

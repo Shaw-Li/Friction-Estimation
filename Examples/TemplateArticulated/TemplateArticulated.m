@@ -16,15 +16,33 @@ pkg load odepkg
 %
 
 % Choosing tire
+<<<<<<< HEAD
 TireModel = VehicleDynamicsLateral.TirePacejka();
+=======
+TireModel = TirePacejka();
+TireModel.a0 = 1;
+TireModel.a1 = 2;
+TireModel.a2 = 700;
+TireModel.a3 = 5000;
+TireModel.a4 = 80;
+TireModel.a5 = 0;
+TireModel.a6 = 0;
+TireModel.a7 = 0.6;
+
+>>>>>>> master
 % Choosing vehicle
 System = VehicleDynamicsLateral.VehicleArticulatedNonlinear();
 System.tire = TireModel;
 % Choosing simulation
-T = 6;                      % Total simulation time [s]
+T = 7;                      % Total simulation time [s]
 resol = 50;                 % Resolution
 TSPAN = 0:T/resol:T;        % Time span [s]
 simulator = VehicleDynamicsLateral.Simulator(System, TSPAN);
+
+simulator.ALPHAT0 = 0.3;              % Initial tractor side slip angle [rad]
+simulator.dPSI0 = 0.25;               % Initial tractor yaw rate [rad/s]
+simulator.dPHI0 = 0.25;        % Initial articulation rate [rad/s]
+
 
 % Simulation
 simulator.Simulate();
@@ -33,10 +51,10 @@ simulator.Simulate();
 %
 
 g = Graphics(simulator);
-g.TractorColor = 'c';
-g.SemitrailerColor = 'm';
-g.Frame('~/Desktop/plot/trajectory');
-g.Animation('~/Desktop/animation/animated_trajectory');
+g.TractorColor = 'r';
+g.SemitrailerColor = 'g';
+g.Frame();
+g.Animation();
 
 %%
 %

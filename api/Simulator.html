@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Simulator</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-11-01"><meta name="DC.source" content="Simulator.m"><style type="text/css">
+      --><title>Simulator</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-11-20"><meta name="DC.source" content="Simulator.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -74,21 +74,32 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
             self.Vehicle = vehicle;
             self.TSpan = tspan;
             <span class="keyword">if</span> isa(self.Vehicle, <span class="string">'VehicleDynamicsLateral.VehicleArticulated'</span>)
-                self.X0 = 0;                     <span class="comment">% Initial tractor CG horizontal position [m]</span>
-                self.Y0 = 0;                     <span class="comment">% Initial tractor CG vertical position [m]</span>
-                self.PSI0 = 0;                   <span class="comment">% Initial tractor yaw angle [rad]</span>
-                self.PHI0 = 0;                   <span class="comment">% Initial articulation angle [rad]</span>
-                self.V0 = 20;                    <span class="comment">% Initial tractor CG velocity [m/s]</span>
-                self.ALPHAT0 = 0;              <span class="comment">% Initial tractor side slip angle [rad]</span>
-                self.dPSI0 = 0;               <span class="comment">% Initial tractor yaw rate [rad/s]</span>
-                self.dPHI0 = 0;        <span class="comment">% Initial articulation rate [rad/s]</span>
+                self.X0 = 0;
+                self.Y0 = 0;
+                self.PSI0 = 0;
+                self.PHI0 = 0;
+                self.V0 = 20;
+                self.ALPHAT0 = 0;
+                self.dPSI0 = 0;
+                self.dPHI0 = 0;
             <span class="keyword">else</span>
-                self.X0 = 0;                     <span class="comment">% Initial CG horizontal position [m]</span>
-                self.Y0 = 0;                     <span class="comment">% Initial CG vertical position [m]</span>
-                self.PSI0 = 0;                   <span class="comment">% Initial yaw angle [rad]</span>
-                self.V0 = 20;                    <span class="comment">% Initial CG velocity [m/s]</span>
-                self.ALPHAT0 = 0;             <span class="comment">% Initial side slip angle [rad]</span>
-                self.dPSI0 = 0;                <span class="comment">% Initial yaw rate [rad/s]</span>
+                <span class="keyword">if</span> isa(self.Vehicle, <span class="string">'VehicleDynamicsLateral.VehicleSimpleNonlinear4DOF'</span>)
+                    self.X0 = 0;
+                    self.Y0 = 0;
+                    self.PSI0 = 0;
+                    self.THETA0 = 0;
+                    self.V0 = 20;
+                    self.ALPHAT0 = 0;
+                    self.dPSI0 = 0;
+                    self.dTHETA0 = 0;
+                <span class="keyword">else</span>
+                    self.X0 = 0;
+                    self.Y0 = 0;
+                    self.PSI0 = 0;
+                    self.V0 = 20;
+                    self.ALPHAT0 = 0;
+                    self.dPSI0 = 0;
+                <span class="keyword">end</span>
             <span class="keyword">end</span>
         <span class="keyword">end</span>
 
@@ -97,7 +108,11 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
             <span class="keyword">if</span> isa(self.Vehicle, <span class="string">'VehicleDynamicsLateral.VehicleArticulated'</span>)
                 f = [self.X0 self.Y0 self.PSI0 self.PHI0 self.V0 self.ALPHAT0 self.dPSI0 self.dPHI0];
             <span class="keyword">else</span>
-                f = [self.X0 self.Y0 self.PSI0 self.V0 self.ALPHAT0 self.dPSI0];
+                <span class="keyword">if</span> isa(self.Vehicle, <span class="string">'VehicleDynamicsLateral.VehicleSimpleNonlinear4DOF'</span>)
+                    f = [self.X0 self.Y0 self.PSI0 self.THETA0 self.V0 self.ALPHAT0 self.dPSI0 self.dTHETA0];
+                <span class="keyword">else</span>
+                    f = [self.X0 self.Y0 self.PSI0 self.V0 self.ALPHAT0 self.dPSI0];
+                <span class="keyword">end</span>
             <span class="keyword">end</span>
 
 
@@ -135,15 +150,31 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
                 self.dPSI = XOUT(:, 7);
                 self.dPHI = XOUT(:, 8);
             <span class="keyword">else</span>
-                [TOUT, XOUT] = ode45(@(t, estados) self.Vehicle.Model(t, estados,self.TSpan), self.TSpan, self.getInitialState());
+                <span class="keyword">if</span> isa(self.Vehicle, <span class="string">'VehicleDynamicsLateral.VehicleSimpleNonlinear4DOF'</span>)
+                    fun = self.Vehicle;
+                    options = odeset(<span class="string">'Mass'</span>, @fun.MassMatrix);
+                    [TOUT, XOUT] = ode45(@(t, estados) self.Vehicle.Model(t, estados,self.TSpan), self.TSpan, self.getInitialState(), options);
 
-                <span class="comment">% Retrieving states post integration</span>
-                self.XT = XOUT(:, 1);
-                self.YT = XOUT(:, 2);
-                self.PSI = XOUT(:, 3);
-                self.VEL = XOUT(:, 4);
-                self.ALPHAT = XOUT(:, 5);
-                self.dPSI = XOUT(:, 6);
+                    <span class="comment">% Retrieving states post integration</span>
+                    self.XT = XOUT(:, 1);
+                    self.YT = XOUT(:, 2);
+                    self.PSI = XOUT(:, 3);
+                    self.THETA = XOUT(:, 4);
+                    self.VEL = XOUT(:, 5);
+                    self.ALPHAT = XOUT(:, 6);
+                    self.dPSI = XOUT(:, 7);
+                    self.dTHETA = XOUT(:, 8);
+                <span class="keyword">else</span>
+                    [TOUT, XOUT] = ode45(@(t, estados) self.Vehicle.Model(t, estados,self.TSpan), self.TSpan, self.getInitialState());
+
+                    <span class="comment">% Retrieving states post integration</span>
+                    self.XT = XOUT(:, 1);
+                    self.YT = XOUT(:, 2);
+                    self.PSI = XOUT(:, 3);
+                    self.VEL = XOUT(:, 4);
+                    self.ALPHAT = XOUT(:, 5);
+                    self.dPSI = XOUT(:, 6);
+                <span class="keyword">end</span>
             <span class="keyword">end</span>
 
             <span class="comment">% TSpan and TOUT contain the same values, but the first is passed in columns, while the second is a vector</span>
@@ -158,18 +189,22 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
         Y0 <span class="comment">% Initial CG vertical position [m]</span>
         PSI0 <span class="comment">% Initial yaw angle [rad]</span>
         PHI0 <span class="comment">% Initial articulation angle [rad]</span>
+        THETA0 <span class="comment">% Initial roll angle [rad]</span>
         V0 <span class="comment">% Initial CG velocity [m/s]</span>
         ALPHAT0 <span class="comment">% Initial side slip angle [rad]</span>
         dPSI0 <span class="comment">% Initial yaw rate [rad/s]</span>
         dPHI0 <span class="comment">% Initial articulation rate [rad/s]</span>
+        dTHETA0 <span class="comment">% Initial roll rate [rad/s]</span>
         XT <span class="comment">% CG horizontal position [m]</span>
         YT <span class="comment">% CG vertical position [m]</span>
         PSI <span class="comment">% Yaw angle [rad]</span>
         PHI <span class="comment">% Relative yaw angle [rad]</span>
+        THETA <span class="comment">% Roll angle [rad]</span>
         VEL <span class="comment">% CG velocity [m/s]</span>
         ALPHAT <span class="comment">% Side slip angle [rad]</span>
         dPSI <span class="comment">% Yaw rate [rad/s]</span>
         dPHI <span class="comment">% Relative yaw rate [rad/s]</span>
+        dTHETA <span class="comment">% Roll rate [rad/s]</span>
     <span class="keyword">end</span>
 <span class="keyword">end</span>
 </pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013a</a><br></p></div><!--
@@ -183,21 +218,32 @@ classdef Simulator<handle
             self.Vehicle = vehicle;
             self.TSpan = tspan;
             if isa(self.Vehicle, 'VehicleDynamicsLateral.VehicleArticulated')
-                self.X0 = 0;                     % Initial tractor CG horizontal position [m]
-                self.Y0 = 0;                     % Initial tractor CG vertical position [m]
-                self.PSI0 = 0;                   % Initial tractor yaw angle [rad]
-                self.PHI0 = 0;                   % Initial articulation angle [rad]
-                self.V0 = 20;                    % Initial tractor CG velocity [m/s]
-                self.ALPHAT0 = 0;              % Initial tractor side slip angle [rad]
-                self.dPSI0 = 0;               % Initial tractor yaw rate [rad/s]
-                self.dPHI0 = 0;        % Initial articulation rate [rad/s]
+                self.X0 = 0;
+                self.Y0 = 0;
+                self.PSI0 = 0;
+                self.PHI0 = 0;
+                self.V0 = 20;
+                self.ALPHAT0 = 0;
+                self.dPSI0 = 0;
+                self.dPHI0 = 0;
             else
-                self.X0 = 0;                     % Initial CG horizontal position [m]
-                self.Y0 = 0;                     % Initial CG vertical position [m]
-                self.PSI0 = 0;                   % Initial yaw angle [rad]
-                self.V0 = 20;                    % Initial CG velocity [m/s]
-                self.ALPHAT0 = 0;             % Initial side slip angle [rad]
-                self.dPSI0 = 0;                % Initial yaw rate [rad/s]
+                if isa(self.Vehicle, 'VehicleDynamicsLateral.VehicleSimpleNonlinear4DOF')
+                    self.X0 = 0;
+                    self.Y0 = 0;
+                    self.PSI0 = 0;
+                    self.THETA0 = 0;
+                    self.V0 = 20;
+                    self.ALPHAT0 = 0;
+                    self.dPSI0 = 0;
+                    self.dTHETA0 = 0;
+                else
+                    self.X0 = 0;
+                    self.Y0 = 0;
+                    self.PSI0 = 0;
+                    self.V0 = 20;
+                    self.ALPHAT0 = 0;
+                    self.dPSI0 = 0;
+                end
             end
         end
 
@@ -206,7 +252,11 @@ classdef Simulator<handle
             if isa(self.Vehicle, 'VehicleDynamicsLateral.VehicleArticulated')
                 f = [self.X0 self.Y0 self.PSI0 self.PHI0 self.V0 self.ALPHAT0 self.dPSI0 self.dPHI0];
             else
-                f = [self.X0 self.Y0 self.PSI0 self.V0 self.ALPHAT0 self.dPSI0];
+                if isa(self.Vehicle, 'VehicleDynamicsLateral.VehicleSimpleNonlinear4DOF')
+                    f = [self.X0 self.Y0 self.PSI0 self.THETA0 self.V0 self.ALPHAT0 self.dPSI0 self.dTHETA0];
+                else
+                    f = [self.X0 self.Y0 self.PSI0 self.V0 self.ALPHAT0 self.dPSI0];
+                end
             end
 
 
@@ -244,15 +294,31 @@ classdef Simulator<handle
                 self.dPSI = XOUT(:, 7);
                 self.dPHI = XOUT(:, 8);
             else
-                [TOUT, XOUT] = ode45(@(t, estados) self.Vehicle.Model(t, estados,self.TSpan), self.TSpan, self.getInitialState());
+                if isa(self.Vehicle, 'VehicleDynamicsLateral.VehicleSimpleNonlinear4DOF')
+                    fun = self.Vehicle;
+                    options = odeset('Mass', @fun.MassMatrix);
+                    [TOUT, XOUT] = ode45(@(t, estados) self.Vehicle.Model(t, estados,self.TSpan), self.TSpan, self.getInitialState(), options);
 
-                % Retrieving states post integration
-                self.XT = XOUT(:, 1);
-                self.YT = XOUT(:, 2);
-                self.PSI = XOUT(:, 3);
-                self.VEL = XOUT(:, 4);
-                self.ALPHAT = XOUT(:, 5);
-                self.dPSI = XOUT(:, 6);
+                    % Retrieving states post integration
+                    self.XT = XOUT(:, 1);
+                    self.YT = XOUT(:, 2);
+                    self.PSI = XOUT(:, 3);
+                    self.THETA = XOUT(:, 4);
+                    self.VEL = XOUT(:, 5);
+                    self.ALPHAT = XOUT(:, 6);
+                    self.dPSI = XOUT(:, 7);
+                    self.dTHETA = XOUT(:, 8);
+                else
+                    [TOUT, XOUT] = ode45(@(t, estados) self.Vehicle.Model(t, estados,self.TSpan), self.TSpan, self.getInitialState());
+
+                    % Retrieving states post integration
+                    self.XT = XOUT(:, 1);
+                    self.YT = XOUT(:, 2);
+                    self.PSI = XOUT(:, 3);
+                    self.VEL = XOUT(:, 4);
+                    self.ALPHAT = XOUT(:, 5);
+                    self.dPSI = XOUT(:, 6);
+                end
             end
 
             % TSpan and TOUT contain the same values, but the first is passed in columns, while the second is a vector
@@ -267,18 +333,22 @@ classdef Simulator<handle
         Y0 % Initial CG vertical position [m]
         PSI0 % Initial yaw angle [rad]
         PHI0 % Initial articulation angle [rad]
+        THETA0 % Initial roll angle [rad]
         V0 % Initial CG velocity [m/s]
         ALPHAT0 % Initial side slip angle [rad]
         dPSI0 % Initial yaw rate [rad/s]
         dPHI0 % Initial articulation rate [rad/s]
+        dTHETA0 % Initial roll rate [rad/s]
         XT % CG horizontal position [m]
         YT % CG vertical position [m]
         PSI % Yaw angle [rad]
         PHI % Relative yaw angle [rad]
+        THETA % Roll angle [rad]
         VEL % CG velocity [m/s]
         ALPHAT % Side slip angle [rad]
         dPSI % Yaw rate [rad/s]
         dPHI % Relative yaw rate [rad/s]
+        dTHETA % Roll rate [rad/s]
     end
 end
 

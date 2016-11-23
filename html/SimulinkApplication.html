@@ -65,7 +65,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Simulink Application</h1><!--introduction--><p>This template show how to simulate a simple vehicle in Simulink using a s-function. The graphics are also plotted.</p><p>
+  </style></head><body><div class="content"><h1>Simulink Application</h1><!--introduction--><p>This template shows how to simulate a simple vehicle in Simulink using a s-function. The graphics are also plotted.</p><p>
 <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 </p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Simulink model</a></li><li><a href="#3">Generating Graphics</a></li><li><a href="#5">See Also</a></li></ul></div><h2>Simulink model<a name="1"></a></h2><p>This model uses the s-function <a href="VehicleSystem.html">VehicleSystem.m</a> in Simulink. The package and this s-function must be in Matlab path.</p><p>The "SimulinkModel.slx" available in the repository ("Examples/SimulinkApplication") is illustrated below:</p><p><img vspace="5" hspace="5" src="../illustrations/SimulinkApplication.png" alt=""> </p><p>It can be seen that the longitudinal forces of the tire are zero for the entire simulation. The steering angle recieve a step input.</p><p>Running the Simulink model</p><pre class="codeinput">sim(<span class="string">'SimulinkModel'</span>);
 </pre><pre class="codeoutput">Warning: Using a default value of 0.2 for maximum step size.  The simulation

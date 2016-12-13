@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>VehicleSimpleLinear</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-12-11"><meta name="DC.source" content="VehicleSimpleLinear.m"><style type="text/css">
+      --><title>VehicleSimpleLinear</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-12-13"><meta name="DC.source" content="VehicleSimpleLinear.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -86,7 +86,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
             self.Fxf = 0;
             self.Fxr = 0;
         <span class="keyword">end</span>
-</pre><h2>Model<a name="3"></a></h2><p>Function with the model</p><pre class="codeinput">        <span class="keyword">function</span> dx = Model(self, t, estados,tspan)
+</pre><h2>Model<a name="3"></a></h2><p>Function with the model</p><pre class="codeinput">        <span class="keyword">function</span> dx = Model(self, t, states,tspan)
             <span class="comment">% Data</span>
             mT = self.mT;
             IT = self.IT;
@@ -106,12 +106,12 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
             v0 = 20;                  <span class="comment">% [m/s]</span>
 
             <span class="comment">% State variables</span>
-            X = estados(1,1);         <span class="comment">% Not used</span>
-            Y = estados(2,1);         <span class="comment">% Not used</span>
-            PSI     = estados(3,1);
-            VT       = estados(4,1);
-            ALPHAT  = estados(5,1);
-            dPSI    = estados(6,1);
+            X = states(1,1);         <span class="comment">% Not used</span>
+            Y = states(2,1);         <span class="comment">% Not used</span>
+            PSI     = states(3,1);
+            VT       = states(4,1);
+            ALPHAT  = states(5,1);
+            dPSI    = states(6,1);
 
             <span class="keyword">if</span> isa(self.deltaf,<span class="string">'function_handle'</span>)
                 deltaf = self.deltaf([X;Y;PSI;VT;ALPHAT;dPSI],t);
@@ -182,7 +182,7 @@ classdef VehicleSimpleLinear < VehicleDynamicsLateral.VehicleSimple
 
         %% Model
         % Function with the model
-        function dx = Model(self, t, estados,tspan)
+        function dx = Model(self, t, states,tspan)
             % Data
             mT = self.mT;
             IT = self.IT;
@@ -202,12 +202,12 @@ classdef VehicleSimpleLinear < VehicleDynamicsLateral.VehicleSimple
             v0 = 20;                  % [m/s]
 
             % State variables
-            X = estados(1,1);         % Not used
-            Y = estados(2,1);         % Not used
-            PSI     = estados(3,1);
-            VT       = estados(4,1);
-            ALPHAT  = estados(5,1);
-            dPSI    = estados(6,1);
+            X = states(1,1);         % Not used
+            Y = states(2,1);         % Not used
+            PSI     = states(3,1);
+            VT       = states(4,1);
+            ALPHAT  = states(5,1);
+            dPSI    = states(6,1);
 
             if isa(self.deltaf,'function_handle')
                 deltaf = self.deltaf([X;Y;PSI;VT;ALPHAT;dPSI],t);

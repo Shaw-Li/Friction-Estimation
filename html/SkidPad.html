@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Skid pad</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-12-11"><meta name="DC.source" content="SkidPad.m"><style type="text/css">
+      --><title>Skid pad</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-12-13"><meta name="DC.source" content="SkidPad.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -99,31 +99,37 @@ ALPHAT = simulator.ALPHAT;
 dPSI = simulator.dPSI;
 
 figure(1)
+hold <span class="string">on</span> ; grid <span class="string">on</span> ; box <span class="string">on</span>
 plot(TSPAN,XT)
 xlabel(<span class="string">'time [s]'</span>)
 ylabel(<span class="string">'Distance in the x direction [m]'</span>)
 
 figure(2)
+hold <span class="string">on</span> ; grid <span class="string">on</span> ; box <span class="string">on</span>
 plot(TSPAN,YT)
 xlabel(<span class="string">'time [s]'</span>)
 ylabel(<span class="string">'Distance in the y direction [m]'</span>)
 
 figure(3)
+hold <span class="string">on</span> ; grid <span class="string">on</span> ; box <span class="string">on</span>
 plot(TSPAN,PSI)
 xlabel(<span class="string">'time [s]'</span>)
 ylabel(<span class="string">'Yaw angle [rad]'</span>)
 
 figure(4)
+hold <span class="string">on</span> ; grid <span class="string">on</span> ; box <span class="string">on</span>
 plot(TSPAN,VEL)
 xlabel(<span class="string">'time [s]'</span>)
 ylabel(<span class="string">'Velocity [m/s]'</span>)
 
 figure(5)
+hold <span class="string">on</span> ; grid <span class="string">on</span> ; box <span class="string">on</span>
 plot(TSPAN,ALPHAT)
 xlabel(<span class="string">'time [s]'</span>)
 ylabel(<span class="string">'Vehicle slip angle [rad/s]'</span>)
 
 figure(6)
+hold <span class="string">on</span> ; grid <span class="string">on</span> ; box <span class="string">on</span>
 plot(TSPAN,dPSI)
 xlabel(<span class="string">'time [s]'</span>)
 ylabel(<span class="string">'Yaw rate [rad/s]'</span>)
@@ -208,31 +214,37 @@ ALPHAT = simulator.ALPHAT;
 dPSI = simulator.dPSI;
 
 figure(1)
+hold on ; grid on ; box on
 plot(TSPAN,XT)
 xlabel('time [s]')
 ylabel('Distance in the x direction [m]')
 
 figure(2)
+hold on ; grid on ; box on
 plot(TSPAN,YT)
 xlabel('time [s]')
 ylabel('Distance in the y direction [m]')
 
 figure(3)
+hold on ; grid on ; box on
 plot(TSPAN,PSI)
 xlabel('time [s]')
 ylabel('Yaw angle [rad]')
 
 figure(4)
+hold on ; grid on ; box on
 plot(TSPAN,VEL)
 xlabel('time [s]')
 ylabel('Velocity [m/s]')
 
 figure(5)
+hold on ; grid on ; box on
 plot(TSPAN,ALPHAT)
 xlabel('time [s]')
 ylabel('Vehicle slip angle [rad/s]')
 
 figure(6)
+hold on ; grid on ; box on
 plot(TSPAN,dPSI)
 xlabel('time [s]')
 ylabel('Yaw rate [rad/s]')

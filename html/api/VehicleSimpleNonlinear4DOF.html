@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>VehicleSimpleNonlinear4DOF</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-12-11"><meta name="DC.source" content="VehicleSimpleNonlinear4DOF.m"><style type="text/css">
+      --><title>VehicleSimpleNonlinear4DOF</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-12-13"><meta name="DC.source" content="VehicleSimpleNonlinear4DOF.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -107,7 +107,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
             self.FXREARRIGHT = 0;
 
         <span class="keyword">end</span>
-</pre><h2>Model<a name="3"></a></h2><p>Fun&ccedil;&atilde;o com as equa&ccedil;&otilde;es de estado do modelo</p><pre class="codeinput">        <span class="keyword">function</span> dx = Model(self, t, estados,tspan)
+</pre><h2>Model<a name="3"></a></h2><p>Fun&ccedil;&atilde;o com as equa&ccedil;&otilde;es de estado do modelo</p><pre class="codeinput">        <span class="keyword">function</span> dx = Model(self, t, states,tspan)
             <span class="comment">% Data</span>
             m = self.mT;
             a = self.a;
@@ -133,14 +133,14 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
             g = 9.81;                 <span class="comment">% Gravity [m/s^2]</span>
 
             <span class="comment">% Estados</span>
-            X = estados(1);
-            Y = estados(2);
-            PSI = estados(3);
-            THETA = estados(4);
-            v = estados(5);
-            ALPHAT = estados(6);
-            dPSI = estados(7);
-            dTHETA = estados(8);
+            X = states(1);
+            Y = states(2);
+            PSI = states(3);
+            THETA = states(4);
+            v = states(5);
+            ALPHAT = states(6);
+            dPSI = states(7);
+            dTHETA = states(8);
 
             FzRight = (m*g*l/2 + KK*THETA + CC*dTHETA)/l;
             FzLeft = -(-m*g*l/2 + KK*THETA + CC*dTHETA)/l;
@@ -225,7 +225,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-        <span class="keyword">function</span> M = MassMatrix(self,~,estados)
+        <span class="keyword">function</span> M = MassMatrix(self,~,states)
             <span class="comment">% Data</span>
             m = self.mT;
             h = self.H;                       <span class="comment">% CG height [m]</span>
@@ -237,9 +237,9 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
             <span class="comment">% Estados</span>
-            THETA = estados(4);
-            v = estados(5);
-            ALPHAT = estados(6);
+            THETA = states(4);
+            v = states(5);
+            ALPHAT = states(6);
 
             M = [1 0 0 0 0 0 0 0;<span class="keyword">...</span>
                  0 1 0 0 0 0 0 0;<span class="keyword">...</span>
@@ -299,7 +299,7 @@ classdef VehicleSimpleNonlinear4DOF < VehicleDynamicsLateral.VehicleSimple
 
         %% Model
         % Função com as equações de estado do modelo
-        function dx = Model(self, t, estados,tspan)
+        function dx = Model(self, t, states,tspan)
             % Data
             m = self.mT;
             a = self.a;
@@ -325,14 +325,14 @@ classdef VehicleSimpleNonlinear4DOF < VehicleDynamicsLateral.VehicleSimple
             g = 9.81;                 % Gravity [m/s^2]
 
             % Estados
-            X = estados(1);
-            Y = estados(2);
-            PSI = estados(3);
-            THETA = estados(4);
-            v = estados(5);
-            ALPHAT = estados(6);
-            dPSI = estados(7);
-            dTHETA = estados(8);
+            X = states(1);
+            Y = states(2);
+            PSI = states(3);
+            THETA = states(4);
+            v = states(5);
+            ALPHAT = states(6);
+            dPSI = states(7);
+            dTHETA = states(8);
 
             FzRight = (m*g*l/2 + KK*THETA + CC*dTHETA)/l;
             FzLeft = -(-m*g*l/2 + KK*THETA + CC*dTHETA)/l;
@@ -417,7 +417,7 @@ classdef VehicleSimpleNonlinear4DOF < VehicleDynamicsLateral.VehicleSimple
 
 
 
-        function M = MassMatrix(self,~,estados)
+        function M = MassMatrix(self,~,states)
             % Data
             m = self.mT;
             h = self.H;                       % CG height [m]
@@ -429,9 +429,9 @@ classdef VehicleSimpleNonlinear4DOF < VehicleDynamicsLateral.VehicleSimple
 
 
             % Estados
-            THETA = estados(4);
-            v = estados(5);
-            ALPHAT = estados(6);
+            THETA = states(4);
+            v = states(5);
+            ALPHAT = states(6);
 
             M = [1 0 0 0 0 0 0 0;...
                  0 1 0 0 0 0 0 0;...
